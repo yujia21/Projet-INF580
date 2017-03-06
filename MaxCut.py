@@ -164,8 +164,8 @@ gwcpu = t1 - t0
 # try out on examples and plot
 
 n_p_list = sys.argv[1].split('_')
-n = n_p_list[1]
-p = n_p_list[2]
+n = n_p_list[0][-2:]
+p = n_p_list[1][:3]
 
 print(str(n)+" nodes, with proba "+str(p)+' of any edge')
 print("maxcut(out) : MIQPobj = "+str(miqpobj)+", MIQPcpu ="+str(miqpcpu))
@@ -174,9 +174,8 @@ print("maxcut(out) : SDPobj = "+str(sdpobj)+", MIQPcpu ="+str(sdpcpu))
 print("maxcut(out) : GWobj = "+str(gwobj)+", MIQPcpu ="+str(gwcpu))
 print('')
 
-f = open(str(n)+'_'+str(p)+'.out', 'w')
-f.write(str(miqpobj)+" "+str(miqpcpu)+'\n')
-f.write(str(milpobj)+" "+str(milpcpu)+'\n')
-f.write(str(sdpobj)+" "+str(sdpcpu)+'\n')
-f.write(str(gwobj)+" "+str(gwcpu)+'\n')
+f = open('results.out', 'a')
+f.write(str(n)+' '+str(p)+' ')
+f.write(str(miqpobj)+' '+str(milpobj)+' '+str(sdpobj)+' '+str(gwobj)+' ')
+f.write(str(miqpcpu)+' '+str(milpcpu)+' '+str(sdpcpu)+' '+str(gwcpu)+'\n')
 f.close()

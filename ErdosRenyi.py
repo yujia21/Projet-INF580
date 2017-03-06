@@ -9,4 +9,4 @@ for n in np.arange(10, 100, 10):
         for (i, j) in G.edges() : 
             #random weight for each edge between 0 to 5
             G[i][j]['weight'] = int(np.ceil(np.random.uniform(0,5)))
-        nx.write_weighted_edgelist(G, 'data_'+str(n)+'_'+str(p)+'.edgelist')
+        nx.write_weighted_edgelist(G, 'data/'+str(n)+'_'+str(p)+'.edgelist')
