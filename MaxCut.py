@@ -80,7 +80,7 @@ def rank_factor(X, rk):
 
 # Gets closest sdp from X (force eigen > 0)    
 def closest_sdp(X) : 
-    evk, evc = np.linalg.eigh(X)
+    evl, evc = np.linalg.eigh(X)
     evl[evl < 0] = 0
     return evc.T.dot(np.diag(evl).dot(evc))
     
