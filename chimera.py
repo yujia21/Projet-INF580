@@ -63,7 +63,7 @@ if __name__ == '__main__':
     #for i in range(len(g)):
     #    s=''.join(map(str,map(int,g[i])))
     #    print(s)
-    g = chimera_nx(2,4)
+    g = chimera_nx(2,0)
     nx.draw(g)
     plt.show()
     #for k in [1, 2, 3, 4] :
