@@ -26,7 +26,7 @@ def chimera(k):
             g[n+k*8:n+k*8+4,n:n+4] = np.diag([1]*4)
     return g
 
-def chimera_nx(k,n):
+def chimera_nx(k,r):
     """
     Create a chimera graph(via nx) for a given k
     """
@@ -44,8 +44,10 @@ def chimera_nx(k,n):
                 G.add_edges_from([(n+4,n+12),(n+5,n+13),(n+6,n+14),(n+7,n+15)])
             if not i==k-1:
                 G.add_edges_from([(n,n+8*k),(n+1,n+1+8*k),(n+2,n+2+8*k),(n+3,n+3+8*k)])
-    remove = random.sample(range(8*k*k),n)
+    remove = random.sample(range(8*k*k),r)
+    print(r,remove)
     G.remove_nodes_from(remove)
+    G.add_nodes_from(remove)
     return G
 
 def output_chimera_edgelist(k,n) :
@@ -61,8 +63,8 @@ if __name__ == '__main__':
     #for i in range(len(g)):
     #    s=''.join(map(str,map(int,g[i])))
     #    print(s)
-#    g = chimera_nx(2)
-#    nx.draw(g)
-#    plt.show()
-    for k in [1, 2, 3, 4] :
-        output_chimera_edgelist(k,4)
+    g = chimera_nx(2,4)
+    nx.draw(g)
+    plt.show()
+    #for k in [1, 2, 3, 4] :
+    #    output_chimera_edgelist(k,4)
