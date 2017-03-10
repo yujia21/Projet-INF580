@@ -45,11 +45,20 @@ def chimera_nx(k):
                 G.add_edges_from([(n,n+8*k),(n+1,n+1+8*k),(n+2,n+2+8*k),(n+3,n+3+8*k)])
     return G
 
+def output_chimera_edgelist(k) :
+    G = chimera_nx(k)
+    for (i, j) in G.edges() : 
+        #random weight for each edge between 0 to 5
+        G[i][j]['weight'] = int(np.ceil(np.random.uniform(0,5)))
+    nx.write_weighted_edgelist(G, 'data_chimera/'+str(k)+'_0.edgelist')
+
 if __name__ == '__main__':
     #g = chimera(2)
     #for i in range(len(g)):
     #    s=''.join(map(str,map(int,g[i])))
     #    print(s)
-    g = chimera_nx(2)
-    nx.draw(g)
-    plt.show()
+#    g = chimera_nx(2)
+#    nx.draw(g)
+#    plt.show()
+#    for k in [1,2,3,4] :
+#        output_chimera_edgelist(k)
