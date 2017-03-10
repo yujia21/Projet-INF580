@@ -111,8 +111,8 @@ def gw_randomized_rounding(V, objX, L, iterations):
 
 # MAIN
 # read edge list file as input
-if len(sys.argv) < 2:
-    print("error : need an edge list filename on cmd line")
+if len(sys.argv) < 3:
+    print("error : need an edge list filename on cmd line and specify if chimera")
     quit()
 # each line : i j w[i,j]
 G = nx.read_weighted_edgelist(sys.argv[1], nodetype = int)
@@ -152,6 +152,8 @@ t1 = time.time()
 sdpcpu = t1 - t0
 sdpobj = sdp.obj_value()
 Xsdp = closest_sdp(np.array(sdp.get_valued_variable('X')))
+sdprank = np.linalg.matrix_rank(Xsdp)
+sdpfull = Xsdp.shape[0]
 
 #t0 = time.time() # because includes SDP time
 N = len(G.nodes())
@@ -160,22 +162,41 @@ V = rank_factor(Xsdp, N)
 t1 = time.time()
 gwcpu = t1 - t0
 
-# chimaera graph? 
-# try out on examples and plot
+if (sys.argv[2] == "erdos_renyi") : 
+    # Erdos Renyi Graphs
+    n_p_list = sys.argv[1].split('_')
+    n = n_p_list[0][-2:]
+    p = n_p_list[1][:3]
 
-n_p_list = sys.argv[1].split('_')
-n = n_p_list[0][-2:]
-p = n_p_list[1][:3]
+    print(str(n)+" nodes, with proba "+str(p)+' of any edge')
+    print("maxcut(out) : MIQPobj = "+str(miqpobj)+", MIQPcpu ="+str(miqpcpu))
+    print("maxcut(out) : MILPobj = "+str(milpobj)+", MILPcpu ="+str(milpcpu))
+    print("maxcut(out) : SDPobj = "+str(sdpobj)+", SDPcpu ="+str(sdpcpu))
+    print("maxcut(out) : GWobj = "+str(gwobj)+", GWcpu ="+str(gwcpu))
+    print('')
 
-print(str(n)+" nodes, with proba "+str(p)+' of any edge')
-print("maxcut(out) : MIQPobj = "+str(miqpobj)+", MIQPcpu ="+str(miqpcpu))
-print("maxcut(out) : MILPobj = "+str(milpobj)+", MIQPcpu ="+str(milpcpu))
-print("maxcut(out) : SDPobj = "+str(sdpobj)+", MIQPcpu ="+str(sdpcpu))
-print("maxcut(out) : GWobj = "+str(gwobj)+", MIQPcpu ="+str(gwcpu))
-print('')
+    f = open('results.out', 'a')
+    f.write(str(n)+' '+str(p)+' ')
+    f.write(str(miqpobj)+' '+str(milpobj)+' '+str(sdpobj)+'('+str(sdprank)+'/'+str(sdpfull)+') '+str(gwobj)+' ')
+    f.write(str(miqpcpu)+' '+str(milpcpu)+' '+str(sdpcpu)+' '+str(gwcpu)+'\n')
+    f.close()
 
-f = open('results.out', 'a')
-f.write(str(n)+' '+str(p)+' ')
-f.write(str(miqpobj)+' '+str(milpobj)+' '+str(sdpobj)+' '+str(gwobj)+' ')
-f.write(str(miqpcpu)+' '+str(milpcpu)+' '+str(sdpcpu)+' '+str(gwcpu)+'\n')
-f.close()
+elif (sys.argv[2] == "chimera") :
+    # Chimera Graphs
+    k_p_list = sys.argv[1].split('_')
+    k = k_p_list[1][-1:]
+    p = k_p_list[2][:1]
+
+    print(str(k)+"-chimera graph, instance "+str(p))
+    print("maxcut(out) : MIQPobj = "+str(miqpobj)+", MIQPcpu ="+str(miqpcpu))
+    print("maxcut(out) : MILPobj = "+str(milpobj)+", MILPcpu ="+str(milpcpu))
+    print("maxcut(out) : SDPobj = "+str(sdpobj)+", SDPcpu ="+str(sdpcpu))
+    print("maxcut(out) : GWobj = "+str(gwobj)+", GWcpu ="+str(gwcpu))
+    print('')
+
+    f = open('results_chimera_nonweighted.out', 'a')
+    f.write(str(k)+' '+str(p)+' ')
+    f.write(str(miqpobj)+' '+str(milpobj)+' '+str(sdpobj)+'('+str(sdprank)+'/'+str(sdpfull)+') '+str(gwobj)+' ')
+    f.write(str(miqpcpu)+' '+str(milpcpu)+' '+str(sdpcpu)+' '+str(gwcpu)+'\n')
+    f.close()
+

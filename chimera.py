@@ -49,8 +49,8 @@ def output_chimera_edgelist(k) :
     G = chimera_nx(k)
     for (i, j) in G.edges() : 
         #random weight for each edge between 0 to 5
-        G[i][j]['weight'] = int(np.ceil(np.random.uniform(0,5)))
-    nx.write_weighted_edgelist(G, 'data_chimera/'+str(k)+'_0.edgelist')
+        G[i][j]['weight'] = 1 #int(np.ceil(np.random.uniform(0,5)))
+    nx.write_weighted_edgelist(G, 'data_chimera.nonweighted/'+str(k)+'_4.edgelist')
 
 if __name__ == '__main__':
     #g = chimera(2)
@@ -60,5 +60,5 @@ if __name__ == '__main__':
 #    g = chimera_nx(2)
 #    nx.draw(g)
 #    plt.show()
-#    for k in [1,2,3,4] :
-#        output_chimera_edgelist(k)
+    for k in [1, 2, 3, 4] :
+        output_chimera_edgelist(k)

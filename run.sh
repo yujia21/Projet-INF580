@@ -5,7 +5,7 @@ do
     for p in 0.3 0.5 0.7 
     do
         DAT=data/${n}_${p}.edgelist
-        python MaxCut.py $DAT
+        python MaxCut.py $DAT erdos_renyi
     done
 done
 
