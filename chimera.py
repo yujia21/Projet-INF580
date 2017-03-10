@@ -1,6 +1,7 @@
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import random
 
 def chimera(k):
     """
@@ -25,7 +26,7 @@ def chimera(k):
             g[n+k*8:n+k*8+4,n:n+4] = np.diag([1]*4)
     return g
 
-def chimera_nx(k):
+def chimera_nx(k,n):
     """
     Create a chimera graph(via nx) for a given k
     """
@@ -43,10 +44,13 @@ def chimera_nx(k):
                 G.add_edges_from([(n+4,n+12),(n+5,n+13),(n+6,n+14),(n+7,n+15)])
             if not i==k-1:
                 G.add_edges_from([(n,n+8*k),(n+1,n+1+8*k),(n+2,n+2+8*k),(n+3,n+3+8*k)])
+    remove = random.sample(range(8*k*k),n)
+    G.remove_nodes_from(remove)
     return G
 
-def output_chimera_edgelist(k) :
-    G = chimera_nx(k)
+def output_chimera_edgelist(k,n) :
+    assert n < 8*k*k
+    G = chimera_nx(k,n)
     for (i, j) in G.edges() : 
         #random weight for each edge between 0 to 5
         G[i][j]['weight'] = 1 #int(np.ceil(np.random.uniform(0,5)))
@@ -61,4 +65,4 @@ if __name__ == '__main__':
 #    nx.draw(g)
 #    plt.show()
     for k in [1, 2, 3, 4] :
-        output_chimera_edgelist(k)
+        output_chimera_edgelist(k,4)
