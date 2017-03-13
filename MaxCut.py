@@ -194,7 +194,7 @@ elif (sys.argv[2] == "chimera") :
     print("maxcut(out) : GWobj = "+str(gwobj)+", GWcpu ="+str(gwcpu))
     print('')
 
-    f = open('results_chimera_nonweighted.out', 'a')
+    f = open('results_chimera_nonweighted_reduced2k2.out', 'a')
     f.write(str(k)+' '+str(p)+' ')
     f.write(str(miqpobj)+' '+str(milpobj)+' '+str(sdpobj)+'('+str(sdprank)+'/'+str(sdpfull)+') '+str(gwobj)+' ')
     f.write(str(miqpcpu)+' '+str(milpcpu)+' '+str(sdpcpu)+' '+str(gwcpu)+'\n')

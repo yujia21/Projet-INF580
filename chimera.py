@@ -26,9 +26,9 @@ def chimera(k):
             g[n+k*8:n+k*8+4,n:n+4] = np.diag([1]*4)
     return g
 
-def chimera_nx(k,r):
+def chimera_nx(k,r=0):
     """
-    Create a chimera graph(via nx) for a given k
+    Create a chimera graph(via nx) for a given k, r is number of nodes to remove, optional
     """
     l=[(0, 4), (0, 5), (0, 6), (0, 7), (1, 4), (1, 5), (1, 6), (1, 7), (2, 4), (2, 5), (2, 6), (2, 7), (3, 4),(3, 5), (3, 6), (3, 7)]
     G = nx.Graph()
@@ -50,21 +50,21 @@ def chimera_nx(k,r):
     G.add_nodes_from(remove)
     return G
 
-def output_chimera_edgelist(k,n) :
-    assert n < 8*k*k
-    G = chimera_nx(k,n)
+def output_chimera_edgelist(k,r) :
+    assert r < 8*k*k
+    G = chimera_nx(k,r)
     for (i, j) in G.edges() : 
         #random weight for each edge between 0 to 5
         G[i][j]['weight'] = 1 #int(np.ceil(np.random.uniform(0,5)))
-    nx.write_weighted_edgelist(G, 'data_chimera.nonweighted/'+str(k)+'_4.edgelist')
+    nx.write_weighted_edgelist(G, 'data_chimera.nonweighted.reduced2k2/'+str(k)+'_0.edgelist')
 
 if __name__ == '__main__':
     #g = chimera(2)
     #for i in range(len(g)):
     #    s=''.join(map(str,map(int,g[i])))
     #    print(s)
-    g = chimera_nx(2,0)
-    nx.draw(g)
-    plt.show()
-    #for k in [1, 2, 3, 4] :
-    #    output_chimera_edgelist(k,4)
+#    g = chimera_nx(2,0)
+#    nx.draw(g)
+#    plt.show()
+    for k in [1, 2, 3, 4] :
+        output_chimera_edgelist(k,2*k*k)
