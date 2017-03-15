@@ -32,6 +32,7 @@ def chimera_nx(k,r=0):
     """
     l=[(0, 4), (0, 5), (0, 6), (0, 7), (1, 4), (1, 5), (1, 6), (1, 7), (2, 4), (2, 5), (2, 6), (2, 7), (3, 4),(3, 5), (3, 6), (3, 7)]
     G = nx.Graph()
+    pos = {}
     for i in range(8*k*k):
         G.add_node(i)
     # Graph k4,4
@@ -44,11 +45,19 @@ def chimera_nx(k,r=0):
                 G.add_edges_from([(n+4,n+12),(n+5,n+13),(n+6,n+14),(n+7,n+15)])
             if not i==k-1:
                 G.add_edges_from([(n,n+8*k),(n+1,n+1+8*k),(n+2,n+2+8*k),(n+3,n+3+8*k)])
+    for i in range(k):
+        for j in range(k):
+            p = (15*j,25*i)
+            for x in range(4):
+                pos[x+8*(j+(i*k))] = (p[0],p[1]+5*x)
+            for x in range(4):
+                pos[4+x+8*(j+(i*k))] = (p[0]+5,p[1]+5*x)
+
     remove = random.sample(range(8*k*k),r)
     print(r,remove)
     G.remove_nodes_from(remove)
     G.add_nodes_from(remove)
-    return G
+    return G,pos
 
 def output_chimera_edgelist(k,r) :
     assert r < 8*k*k
@@ -66,5 +75,8 @@ if __name__ == '__main__':
 #    g = chimera_nx(2,0)
 #    nx.draw(g)
 #    plt.show()
-    for k in [5,6,7,8] :
-        output_chimera_edgelist(k,0)
+    g,pos = chimera_nx(3,0)
+    nx.draw(g,pos,with_labels=True)
+    plt.show()
+#    for k in [1, 2, 3, 4] :
+#        output_chimera_edgelist(k,2*k*k)
