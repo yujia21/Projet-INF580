@@ -66,5 +66,5 @@ if __name__ == '__main__':
 #    g = chimera_nx(2,0)
 #    nx.draw(g)
 #    plt.show()
-    for k in [1, 2, 3, 4] :
-        output_chimera_edgelist(k,2*k*k)
+    for k in [5,6,7,8] :
+        output_chimera_edgelist(k,0)

@@ -8,8 +8,9 @@ import pyomo.opt
 import cvxopt as cvx #used by picos
 import picos as pic #can solve SDP
 import networkx as nx #manipulate graphs
+import random
 
-GWitn = 10000000 #max iteration of randomized rounding of GW
+GWitn = 10000 #max iteration of randomized rounding of GW
 MyEpsilon = 1e-6 # tolerance
 cplexTimeLimit= 100 #maximum seconds of user CPU for CPLEX
 
@@ -108,6 +109,35 @@ def gw_randomized_rounding(V, objX, L, iterations):
         count +=1
     return (x_cut, obj)
     
+def gw_randomized_rounding_improved(V, objX, L, iterations):
+    n = V.shape[0]
+    count = 0
+    obj = 0
+    print("maxcut(GW/rnd) : impro_ithn objfun")
+    while (count<iterations):
+        # normalized vector on unit sphere
+        r = np.random.normal(0,1,n)
+        r /= np.linalg.norm(r) 
+
+        # sign of V.r
+        x = np.sign(np.dot(V,r))
+        x[x>=0] = 1 # avoid 0
+        for i in np.arange(0,len(x),4):
+            rn = random.randint(0,3)
+            x[i]=x[i+rn]
+            x[i+1]=x[i+rn]
+            x[i+2]=x[i+rn]
+            x[i+3]=x[i+rn]
+        
+        # obj fn
+        o = np.dot(x.T, np.dot(L,x))
+        
+        if o > obj : 
+            x_cut = x
+            obj = o
+            print(str(count)+"\t"+str(obj))
+        count +=1
+    return (x_cut, obj)
 
 # MAIN
 # read edge list file as input
@@ -162,6 +192,11 @@ V = rank_factor(Xsdp, N)
 t1 = time.time()
 gwcpu = t1 - t0
 
+if (sys.argv[2] == "chimera"):
+    (gwcut2, gwobj2) = gw_randomized_rounding_improved(V, sdp.obj_value(), L, GWitn)
+    t2 = time.time()
+    gw2cpu = t2 - t1 + sdpcpu
+
 if (sys.argv[2] == "erdos_renyi") : 
     # Erdos Renyi Graphs
     n_p_list = sys.argv[1].split('_')
@@ -194,9 +229,9 @@ elif (sys.argv[2] == "chimera") :
     print("maxcut(out) : GWobj = "+str(gwobj)+", GWcpu ="+str(gwcpu))
     print('')
 
-    f = open('results_chimera_nonweighted.out', 'a')
+    f = open('results_cn_plus.out', 'a')
     f.write(str(k)+' '+str(p)+' ')
-    f.write(str(miqpobj)+' '+str(milpobj)+' '+str(sdpobj)+'('+str(sdprank)+'/'+str(sdpfull)+') '+str(gwobj)+' ')
-    f.write(str(miqpcpu)+' '+str(milpcpu)+' '+str(sdpcpu)+' '+str(gwcpu)+'\n')
+    f.write(str(miqpobj)+' '+str(milpobj)+' '+str(sdpobj)+'('+str(sdprank)+'/'+str(sdpfull)+') '+str(gwobj)+' '+str(gwobj2)+' ')
+    f.write(str(miqpcpu)+' '+str(milpcpu)+' '+str(sdpcpu)+' '+str(gwcpu)+' '+str(gw2cpu)+'\n')
     f.close()
 

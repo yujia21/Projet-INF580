@@ -1,11 +1,11 @@
 #!/bin/bash
 
-for k in 1 2 3 4
+for k in 5 6 7 8
 do
-    for p in 0 1 2 3 4 
+    for p in 0
     do
-        DAT=data_chimera.nonweighted.reduced2k2/${k}_${p}.edgelist
-        python MaxCut.py $DAT chimera
+        DAT=data_chimera.nonweighted/${k}_${p}.edgelist
+        python MaxCutVis.py $DAT chimera
     done
 done
 
